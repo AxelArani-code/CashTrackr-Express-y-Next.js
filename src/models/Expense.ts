@@ -18,7 +18,7 @@ class Expense extends Model{
 
     //llave Foranea 
      @ForeignKey(() => Budget)
-     declare butgetId: number
+     declare budgetId: number
     
     @BelongsTo(() => Budget)
     declare budget: Budget
