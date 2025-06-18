@@ -5,7 +5,7 @@ import { handleInputErrors } from "../middleware/validation";
 import { validateBudgetExists, validateBudgetId, validateBudgetInput } from "../middleware/budget";
 import { ExpensesController } from "../controllers/ExpenseController";
 import { Validate } from "sequelize-typescript";
-import { validateExpenseInput } from "../middleware/expense";
+import { validateExpenseId, validateExpenseInput } from "../middleware/expense";
 
 
 const router = Router()
@@ -13,6 +13,7 @@ const router = Router()
 //Llamado los Middle, automaticamente a los Params
 router.param('budgetId', validateBudgetId)
 router.param('budgetId', validateBudgetExists)
+router.param('expenseId', validateExpenseId )
 
 //Metodo de HTTP que llama direfernte controller 
 router.get('/', BudgetController.getAll) //Obtener Todos los productos
