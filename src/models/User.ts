@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType, HasMany, Default, Unique, AllowNull, Table } from "sequelize-typescript";
+import { Table, Column, Model, DataType, HasMany, Default, Unique, AllowNull,  } from "sequelize-typescript";
+import Budget from "./Budget";
 
 @Table  ({
     tableName: 'users'
@@ -34,4 +35,12 @@ class User extends Model{
     })
     declare confirmed: string
 
+    @HasMany(()=> Budget,{
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+   })
+   
+   declare budgets: Budget[]
+
 }
+export default User
