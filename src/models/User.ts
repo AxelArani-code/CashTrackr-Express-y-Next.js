@@ -25,7 +25,7 @@ class User extends Model{
     declare email: string
 
     @Column({
-        type:DataType.STRING(10)
+        type:DataType.STRING(6)
     })
     declare token: string
 
