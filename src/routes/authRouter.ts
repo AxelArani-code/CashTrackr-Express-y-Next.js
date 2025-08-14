@@ -31,4 +31,14 @@ router.post('/create-account',
     )
 
 
+    router.post('/login',
+        body('email')
+        .isEmail().withMessage('Emial no valido'),
+        body('password')
+        .notEmpty().withMessage('El password no valido'),
+        handleInputErrors,
+        AuthController.login
+    )
+
+
 export default router 
