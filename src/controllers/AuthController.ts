@@ -4,6 +4,7 @@ import { checkPassword, hashPassword } from "../utils/auth"
 import { generateToken } from "../utils/token"
 import { AuthEmail } from "../emails/AuthEmail"
 import { generateJWT } from "../utils/jwt"
+import  Jwt  from 'jsonwebtoken';
 
 
 
@@ -73,15 +74,15 @@ export class AuthController {
             res.status(401).json({ error: error.message })
         }
 
-       const token =  generateJWT(user.id)
+        const token = generateJWT(user.id)
 
         res.json(token)
 
     }
 
-    
+
     static forgotPassword = async (req: Request, res: Response) => {
-           const { email } = req.body
+        const { email } = req.body
         //Prevenir duplicados
         const user = await User.findOne({ where: { email } })
         if (!user) {
@@ -92,7 +93,7 @@ export class AuthController {
         await user.save()
         //Enviarele el Emial 
         await AuthEmail.sendPasswordResetToken({
-            name: user.name, 
+            name: user.name,
             email: user.email,
             token: user.token
         })
@@ -100,33 +101,36 @@ export class AuthController {
 
     }
 
-      static validateToken = async (req: Request, res: Response) => {
-          const {token}= req.body
-          const tokenExists = await User.findOne({where: {token}})
-          if(!tokenExists){
-            const error  = new Error('Token no valido')
-            res.status(404).json({error: error.message})
-          }
-          res.json('Token Valido...')
+    static validateToken = async (req: Request, res: Response) => {
+        const { token } = req.body
+        const tokenExists = await User.findOne({ where: { token } })
+        if (!tokenExists) {
+            const error = new Error('Token no valido')
+            res.status(404).json({ error: error.message })
+        }
+        res.json('Token Valido...')
 
     }
 
-       static resetPasswordWithToken = async (req: Request, res: Response) => {
-         const {token} = req.params
-         const { password} = req.body
+    static resetPasswordWithToken = async (req: Request, res: Response) => {
+        const { token } = req.params
+        const { password } = req.body
 
 
-          const user = await User.findOne({where: {token}})
-          if(!user){
-            const error  = new Error('Token no valido')
-            res.status(404).json({error: error.message})
-          }
-          //Asignar el nuevo password
-          user.password = await hashPassword(password)
-          user.token = null 
-          await user.save()
+        const user = await User.findOne({ where: { token } })
+        if (!user) {
+            const error = new Error('Token no valido')
+            res.status(404).json({ error: error.message })
+        }
+        //Asignar el nuevo password
+        user.password = await hashPassword(password)
+        user.token = null
+        await user.save()
 
-         res.json('El Password se modifico correctamente')
+        res.json('El Password se modifico correctamente')
 
+    }
+    static user = async (req: Request, res: Response) => {
+      res.json(req.user)
     }
 }

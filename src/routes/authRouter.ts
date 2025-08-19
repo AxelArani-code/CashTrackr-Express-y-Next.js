@@ -3,6 +3,7 @@ import { AuthController } from "../controllers/AuthController";
 import { body, param } from "express-validator";
 import { handleInputErrors } from "../middleware/validation";
 import { limiter } from "../config/limiter";
+import { authenticate } from "../middleware/auth";
 
 const router = Router()
 
@@ -68,6 +69,10 @@ router.post('/reset-password/:token',
         .isLength({min:8}).withMessage('El password es miy corto, minimo 8 caracteres'),
         handleInputErrors,
         AuthController.resetPasswordWithToken
+)
+router.get('/user',
+    authenticate,
+    AuthController.user
 )
 
 export default router 
