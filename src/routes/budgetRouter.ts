@@ -2,17 +2,21 @@ import { Router } from "express";
 import { body, param } from "express-validator";
 import { BudgetController } from "../controllers/BudgetController";
 import { handleInputErrors } from "../middleware/validation";
-import { validateBudgetExists, validateBudgetId, validateBudgetInput } from "../middleware/budget";
+import { hasAccess, validateBudgetExists, validateBudgetId, validateBudgetInput } from "../middleware/budget";
 import { ExpensesController } from "../controllers/ExpenseController";
 import { Validate } from "sequelize-typescript";
 import { validateExpenseExists, validateExpenseId, validateExpenseInput } from "../middleware/expense";
+import { authenticate } from "../middleware/auth";
 
 
 const router = Router()
 
+router.use(authenticate) //req.user
+
 //Llamado los Middle, automaticamente a los Params
 router.param('budgetId', validateBudgetId)
-router.param('budgetId', validateBudgetExists)
+router.param('budgetId', validateBudgetExists)//req.budget
+router.param('budgetId', hasAccess)
 
 router.param('expenseId', validateExpenseId )
 router.param('expenseId', validateExpenseExists )

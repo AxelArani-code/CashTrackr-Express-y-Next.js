@@ -12,6 +12,9 @@ export class BudgetController{
                 ['createdAt', 'DESC']
             ], 
            //TODO: Filtara pro el usuario autenticado
+           where:{
+            userId: req.user.id
+           }
           })
 
           res.json(budgets)
@@ -25,6 +28,7 @@ export class BudgetController{
         //Ingresar los datos 
         try {
             const budget = new Budget(req.body)
+            budget.userId = req.user.id
 
             await budget.save()
             res.status(201).json('Presupuesto Creado Correctamente')
@@ -37,6 +41,11 @@ export class BudgetController{
     static getById = async (req: Request, res: Response)=>{
           const budget = await Budget.findByPk(req.budget.id,{
             include: [Expense]
+        })
+        if(req.budget.userId !== req.user.id)
+        res.json({
+          budget:req.budget,
+          user: req.user
         })
         res.json(budget)
     }
