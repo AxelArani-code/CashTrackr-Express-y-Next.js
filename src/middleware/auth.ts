@@ -4,10 +4,10 @@ import User from "../models/User";
 
 
 
-declare global{
-    namespace Expense{
-        interface Request{
-            user?: User
+declare global {
+    namespace Express {
+        interface Request {
+            user?: User;
         }
     }
 }
